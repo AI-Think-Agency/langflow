@@ -82,7 +82,24 @@ export const swatchColors = [
   "bg-terminal-green text-cosmic-void",
 ];
 
+// Kids Mode category colours (used by KidsSidebarComponent and node header tinting)
+export const KIDS_CATEGORY_COLORS: Record<string, string> = {
+  talk: "#6366f1",   // indigo
+  brain: "#ec4899",  // pink
+  think: "#f59e0b",  // amber
+  do: "#10b981",     // emerald
+};
+
 export const nodeColors: { [char: string]: string } = {
+  // Kids Mode: colour nodes by their kids_category
+  input_output: KIDS_CATEGORY_COLORS.talk,
+  models_and_agents: KIDS_CATEGORY_COLORS.brain,
+  processing: KIDS_CATEGORY_COLORS.think,
+  flow_controls: KIDS_CATEGORY_COLORS.think,
+  tools: KIDS_CATEGORY_COLORS.do,
+  utilities: KIDS_CATEGORY_COLORS.do,
+  helpers: KIDS_CATEGORY_COLORS.do,
+  // Legacy / standard colours preserved below
   inputs: "#10B981",
   outputs: "#AA2411",
   data: "#198BF6",

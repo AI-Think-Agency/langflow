@@ -10,6 +10,7 @@ from langflow.api.v1 import (
     flow_version_router,
     flows_router,
     folders_router,
+    kids_router,
     knowledge_bases_router,
     login_router,
     mcp_projects_router,
@@ -42,6 +43,7 @@ router_v2 = APIRouter(
 
 router_v1.include_router(chat_router)
 router_v1.include_router(endpoints_router)
+router_v1.include_router(kids_router)
 router_v1.include_router(validate_router)
 router_v1.include_router(store_router)
 router_v1.include_router(flows_router)
