@@ -622,10 +622,19 @@ async def get_and_cache_all_types_dict(
         custom_flat = custom_components_dict.get("components", custom_components_dict) or {}
 
         # Merge built-in and custom components (no wrapper at cache level)
-        component_cache.all_types_dict = {
+        merged = {
             **langflow_components["components"],
             **custom_flat,
         }
+
+        # Kids Mode: filter to curated component set when KIDS_MODE is enabled
+        from lfx.interface.kids_mode import filter_components_for_kids, is_kids_mode
+
+        if is_kids_mode():
+            merged = filter_components_for_kids(merged)
+            await logger.adebug("Kids Mode enabled: component palette restricted to curated set")
+
+        component_cache.all_types_dict = merged
         component_count = sum(len(comps) for comps in component_cache.all_types_dict.values())
         await logger.adebug(f"Loaded {component_count} components")
     return component_cache.all_types_dict

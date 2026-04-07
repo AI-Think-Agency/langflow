@@ -1,5 +1,8 @@
 import Fuse from "fuse.js";
 import { cloneDeep, debounce } from "lodash";
+import { useKidsMode } from "@/hooks/use-kids-mode";
+import { useKidsStore } from "@/stores/kidsStore";
+import { KidsSidebarComponent } from "./components/KidsSidebarComponent";
 import {
   createContext,
   memo,
@@ -152,6 +155,8 @@ interface FlowSidebarComponentProps {
 }
 
 export function FlowSidebarComponent({ isLoading }: FlowSidebarComponentProps) {
+  const kidsConfig = useKidsMode();
+  const kidsLevel = useKidsStore((state) => state.level);
   const rawData = useTypesStore((state) => state.data);
 
   // Filter out knowledge components from files_and_knowledge category when ENABLE_KNOWLEDGE_BASES is OFF
@@ -682,6 +687,31 @@ export function FlowSidebarComponent({ isLoading }: FlowSidebarComponentProps) {
     setFilterComponent("");
     setFilterData(baseData);
   }, [setFilterEdge, setFilterComponent, setFilterData, baseData]);
+
+  // Kids Mode: render simplified sidebar when KIDS_MODE is enabled
+  if (kidsConfig.kids_mode) {
+    return (
+      <Sidebar
+        collapsible="offcanvas"
+        data-testid="shad-sidebar"
+        className="noflow select-none"
+      >
+        <SidebarContent className="flex-1">
+          {isLoading ? (
+            <div className="flex flex-col gap-2 p-3">
+              <SkeletonGroup count={8} className="my-0.5 h-12 rounded-xl" />
+            </div>
+          ) : (
+            <KidsSidebarComponent
+              data={rawData}
+              categories={kidsConfig.categories}
+              userLevel={kidsLevel}
+            />
+          )}
+        </SidebarContent>
+      </Sidebar>
+    );
+  }
 
   return (
     <Sidebar
